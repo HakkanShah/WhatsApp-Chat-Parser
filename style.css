@@ -1,0 +1,85 @@
+:root{
+    --bg:#0b141a;
+    --chat-bg:#0b141a;
+    --panel:#202c33;
+    --panel-2:#111b21;
+    --text:#e9edef;
+    --muted:#8696a0;
+    --out:#005c4b;
+    --out-hover:#025144;
+    --in:#202c33;
+    --shadow: rgba(0,0,0,.35);
+    --pill:#1f2c33;
+    --pill-text:#d1d7db;
+    --accent:#00a884;
+    --tick-grey:#9aa6ad;
+    --tick-blue:#53bdeb;
+  }
+  
+  *{box-sizing:border-box}
+  html,body,#app{height:100%}
+  body{margin:0;font-family:system-ui,Roboto,Arial;color:var(--text);background:var(--bg)}
+  #app{display:flex;flex-direction:column}
+  
+  /* Topbar */
+  .topbar{display:flex;justify-content:space-between;align-items:center;
+    padding:10px 12px;background:var(--panel);border-bottom:1px solid #26343c}
+  .brand{display:flex;align-items:center;gap:10px}
+  .wa-logo{width:28px;height:28px}
+  .brand-text{font-weight:600}
+  .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .file-upload{background:var(--panel-2);padding:8px 10px;border-radius:8px;
+    border:1px dashed #31424b;cursor:pointer}
+  .file-upload input{display:none}
+  .text-input{background:var(--panel-2);border:1px solid #31424b;border-radius:8px;
+    padding:8px 10px;color:var(--text)}
+  .btn{background:var(--accent);border:none;color:#052d23;padding:8px 12px;
+    border-radius:8px;cursor:pointer;font-weight:600}
+  .btn-secondary{background:#2a3942;color:var(--text);border:none;padding:8px 12px;
+    border-radius:8px;cursor:pointer}
+  .icon-btn{background:var(--panel-2);border:1px solid #31424b;color:var(--text);
+    border-radius:8px;padding:8px 12px;cursor:pointer}
+  
+  /* Chat area */
+  .chat-wrapper{position:relative;flex:1}
+  .chat-bg{position:absolute;inset:0;z-index:0;opacity:.25;
+    background-image: radial-gradient(#20343c 1px, transparent 1px);
+    background-size:20px 20px;background-color:var(--chat-bg)}
+  .chat-container{position:relative;z-index:1;overflow-y:auto;height:100%;
+    padding:18px 12px 24px;display:flex;flex-direction:column;gap:6px}
+  
+  /* Messages */
+  .message{max-width:75%;padding:6px 8px 4px;border-radius:7.5px;
+    font-size:14px;line-height:1.35;word-wrap:break-word;white-space:pre-wrap;
+    box-shadow:0 1px 1px var(--shadow)}
+  .message.sent{margin-left:auto;background:var(--out)}
+  .message.sent:hover{background:var(--out-hover)}
+  .message.received{margin-right:auto;background:var(--in)}
+  .timestamp{display:block;text-align:right;font-size:11px;margin-top:2px;color:var(--muted)}
+  .message.sent .timestamp{color:#b2dfc9}
+  .ticks{margin-left:4px;color:var(--tick-grey)}
+  .message.sent .ticks.read{color:var(--tick-blue)}
+  
+  /* Date pill */
+  .date-separator{align-self:center;background:var(--pill);color:var(--pill-text);
+    padding:4px 10px;border-radius:999px;font-size:12px;margin:12px auto}
+  
+  /* Composer */
+  .composer{display:flex;gap:8px;align-items:center;padding:10px 12px;
+    background:var(--panel);border-top:1px solid #26343c}
+  .composer-input{flex:1;background:var(--panel-2);border:1px solid #31424b;
+    border-radius:20px;padding:10px 14px;color:var(--text)}
+  .composer-send{background:var(--accent);border:none;color:#052d23;
+    border-radius:50%;width:40px;height:40px;cursor:pointer;font-weight:700}
+  
+  /* Modal */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;
+    align-items:center;justify-content:center;padding:16px;z-index:100}
+  .modal[aria-hidden="false"]{display:flex}
+  .modal-content{background:var(--panel-2);border:1px solid #31424b;
+    border-radius:12px;max-width:600px;width:100%}
+  .modal-header{display:flex;justify-content:space-between;align-items:center;
+    padding:12px 14px;border-bottom:1px solid #26343c}
+  .modal-title{font-weight:700}
+  .modal-body{padding:12px 16px;color:var(--text)}
+  

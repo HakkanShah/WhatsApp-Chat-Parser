@@ -105,7 +105,6 @@ sendPreview.addEventListener("click", () => {
   renderChat();
 });
 
-// Buttons
 resetBtn.addEventListener("click", () => {
   youNameInput.value = "";
   searchInput.value = "";

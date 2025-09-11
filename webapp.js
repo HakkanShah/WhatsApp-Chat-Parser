@@ -119,4 +119,4 @@ bottomBtn.addEventListener("click", () => {
 
 // Modal
 helpBtn.addEventListener("click", () => helpModal.setAttribute("aria-hidden", "false"));
-closeHelp.addEventListener("click", () => helpModal.setAttribute("aria-hidden", "true")); 
+closeHelp.addEventListener("click", () => helpModal.setAttribute("aria-hidden", "true"));

@@ -13,7 +13,6 @@ const closeHelp = document.getElementById("closeHelp");
 
 let messages = [];
 
-// Parse uploaded chat
 fileInput.addEventListener("change", e => {
   const file = e.target.files[0];
   if (!file) return;

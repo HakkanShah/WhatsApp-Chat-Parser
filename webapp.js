@@ -116,6 +116,5 @@ bottomBtn.addEventListener("click", () => {
   chatContainer.scrollTop = chatContainer.scrollHeight;
 });
 
-
 helpBtn.addEventListener("click", () => helpModal.setAttribute("aria-hidden", "false"));
 closeHelp.addEventListener("click", () => helpModal.setAttribute("aria-hidden", "true"));

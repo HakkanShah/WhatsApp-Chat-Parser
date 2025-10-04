@@ -95,7 +95,6 @@ function renderChat() {
   chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
-// Preview composer
 sendPreview.addEventListener("click", () => {
   const txt = previewInput.value.trim();
   if (!txt) return;

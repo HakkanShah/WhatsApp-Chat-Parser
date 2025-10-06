@@ -46,7 +46,7 @@ function parseChat(text) {
 
   renderChat();
 }
-
+ 
 function renderChat() {
   chatContainer.innerHTML = "";
   const you = youNameInput.value.trim().toLowerCase();

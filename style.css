@@ -20,13 +20,8 @@
   box-sizing: border-box;
 }
 
-html,
-body,
-#app {
+html, body, #app {
   height: 100%;
-}
-
-body {
   margin: 0;
   font-family: system-ui, Roboto, Arial;
   color: var(--text);
@@ -40,16 +35,17 @@ body {
   height: 100%;
 }
 
-/* Topbar (Fixed Header) */
+/* Topbar */
 .topbar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
+  height: 56px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 10px 12px;
+  justify-content: space-between;
+  padding: 0 12px;
   background: var(--panel);
   border-bottom: 1px solid #26343c;
   z-index: 50;
@@ -62,8 +58,8 @@ body {
 }
 
 .wa-logo {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
 }
 
 .brand-text {
@@ -72,16 +68,15 @@ body {
   white-space: nowrap;
 }
 
-.controls {
+/* Upload button always visible */
+.upload-wrapper {
   display: flex;
-  gap: 8px;
   align-items: center;
-  flex-wrap: nowrap;
 }
 
 .file-upload {
   background: var(--panel-2);
-  padding: 6px 8px;
+  padding: 6px 10px;
   border-radius: 8px;
   border: 1px dashed #31424b;
   cursor: pointer;
@@ -92,32 +87,107 @@ body {
   display: none;
 }
 
+/* Desktop controls */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .text-input {
   background: var(--panel-2);
   border: 1px solid #31424b;
   border-radius: 8px;
   padding: 6px 8px;
   color: var(--text);
-  width: 150px;
+  font-size: 13px;
 }
 
 .btn {
   background: var(--accent);
   border: none;
   color: #052d23;
-  padding: 8px 12px;
+  padding: 6px 12px;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
 }
 
-.btn-secondary,
+.btn-secondary {
+  background: var(--panel-2);
+  border: 1px solid #31424b;
+  color: var(--text);
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
 .icon-btn {
   background: var(--panel-2);
   border: 1px solid #31424b;
   color: var(--text);
   border-radius: 8px;
-  padding: 8px 12px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+/* Hamburger */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+  width: 24px;
+}
+
+.hamburger span {
+  height: 3px;
+  width: 100%;
+  background: var(--text);
+  border-radius: 2px;
+  transition: 0.3s;
+}
+
+/* Sidebar */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  z-index: 90;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.show {
+  display: block;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: -250px;
+  width: 250px;
+  height: 100%;
+  background: var(--panel-2);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  box-shadow: -4px 0 10px rgba(0,0,0,0.5);
+  transition: right 0.3s ease;
+}
+
+.sidebar.open {
+  right: 0;
+}
+
+.sidebar-close {
+  align-self: flex-end;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  color: var(--text);
   cursor: pointer;
 }
 
@@ -125,7 +195,7 @@ body {
 .chat-wrapper {
   position: relative;
   flex: 1;
-  margin-top: 58px; /* space for fixed header */
+  margin-top: 56px; /* fixed topbar */
   display: flex;
   flex-direction: column;
 }
@@ -144,8 +214,8 @@ body {
   position: relative;
   z-index: 1;
   overflow-y: auto;
-  height: 100%;
-  padding: 18px 12px 80px; /* bottom padding for composer */
+  flex: 1;
+  padding: 18px 12px 80px;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -155,7 +225,7 @@ body {
 /* Messages */
 .message {
   max-width: 75%;
-  padding: 6px 8px 4px;
+  padding: 6px 10px 4px;
   border-radius: 7.5px;
   font-size: 14px;
   line-height: 1.35;
@@ -250,7 +320,7 @@ body {
 .modal {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0,0,0,0.5);
   display: none;
   align-items: center;
   justify-content: center;
@@ -287,71 +357,37 @@ body {
   color: var(--text);
 }
 
-/* Responsive Design */
+/* Responsive */
 @media (max-width: 768px) {
-  .brand-text {
-    font-size: 14px;
-  }
-
   .controls {
-    gap: 4px;
+    display: none;
   }
 
-  .file-upload,
-  .btn,
-  .btn-secondary,
-  .icon-btn {
-    padding: 6px 8px;
-    font-size: 12px;
-  }
-
-  .text-input {
-    width: 110px;
-    font-size: 13px;
-  }
-
-  .chat-container {
-    padding: 12px 8px 80px;
-  }
-
-  .message {
-    font-size: 13px;
-  }
-
-  .composer-input {
-    font-size: 13px;
-    padding: 8px 12px;
+  .hamburger {
+    display: flex;
   }
 }
 
 @media (max-width: 480px) {
-  .topbar {
-    padding: 8px 10px;
-  }
-
-  .brand {
-    gap: 6px;
+  .brand-text {
+    font-size: 14px;
   }
 
   .wa-logo {
-    width: 24px;
-    height: 24px;
-  }
-
-  .brand-text {
-    font-size: 13px;
-  }
-
-  .controls {
-    display: none; /* hide controls for small screens */
+    width: 28px;
+    height: 28px;
   }
 
   .message {
-    font-size: 12.5px;
+    font-size: 13px;
     max-width: 85%;
   }
 
   .composer-input {
-    font-size: 12.5px;
+    font-size: 13px;
+  }
+
+  .sidebar {
+    width: 220px;
   }
 }

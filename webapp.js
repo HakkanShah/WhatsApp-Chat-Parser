@@ -82,7 +82,7 @@ function renderChat() {
       if (div.classList.contains("sent")) {
         const ticks = document.createElement("span");
         ticks.className = "ticks read";
-        ticks.innerText = "✔✔";
+        ticks.innerText = "✔";
         timeSpan.appendChild(ticks);
       }
 

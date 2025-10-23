@@ -2,12 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Viewport meta tag is crucial for mobile responsiveness -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WhatsApp Chat Viewer</title>
-    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Load Inter font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -125,13 +122,16 @@
 </head>
 <body class="bg-gray-200 h-[100dvh] overflow-hidden">
 
-    <!-- App Wrapper -->
     <div class="flex flex-col h-full max-w-4xl mx-auto shadow-2xl bg-[#EAE6DF]">
         
-        <!-- Header -->
         <header class="bg-[#008069] text-white p-3 shadow-md z-20 flex justify-between items-center flex-shrink-0">
-            <h1 class="text-xl font-semibold">WhatsApp Chat Viewer</h1>
-            <!-- Hamburger Menu Button -->
+            <div class="flex items-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-7 h-7" fill="currentColor">
+                    <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27.2 106.1 27.2h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.8 0-67.3-9.5-96.2-26.7l-6.8-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/>
+                </svg>
+                <h1 class="text-xl font-semibold">WhatsApp Chat Viewer</h1>
+            </div>
+            
             <button id="menu-toggle" class="p-2 rounded-full hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-white">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
@@ -139,25 +139,20 @@
             </button>
         </header>
         
-        <!-- Chat Area -->
         <main id="chat-container" class="flex-grow overflow-y-auto" style="background-image: url('https://i.pinimg.com/736x/85/ec/df/85ecdf1c36110b708ddf94aa35b8f714.jpg'); background-repeat: repeat; background-position: center; background-size: auto;">
             <div id="message-list" class="flex flex-col space-y-3 p-4">
-                <!-- Welcome Message -->
                 <div class="date-separator">
                     Welcome!
                 </div>
                 <div class="system-message">
                     Upload your .txt chat file using the menu.
                 </div>
-                <!-- Messages will be injected here -->
-            </div>
+                </div>
         </main>
     </div>
 
-    <!-- Menu Backdrop -->
     <div id="menu-backdrop" class="fixed inset-0 bg-black/60 z-30 hidden" aria-hidden="true"></div>
 
-    <!-- Menu Drawer -->
     <aside id="menu-drawer" class="fixed top-0 right-0 h-full w-4/5 max-w-xs bg-white text-black shadow-lg z-40 p-6 flex flex-col space-y-4">
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-lg font-semibold">Menu</h2>
@@ -168,7 +163,6 @@
             </button>
         </div>
         
-        <!-- File Upload Button -->
         <label for="file-input" class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 text-white rounded-lg shadow-md cursor-pointer hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
@@ -177,7 +171,6 @@
         </label>
         <input type="file" id="file-input" accept=".txt">
         
-        <!-- Scroll to Bottom -->
         <button id="scroll-bottom-btn" class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-200 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition-all">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
@@ -185,7 +178,6 @@
             <span>Scroll to Bottom</span>
         </button>
         
-        <!-- Reset/Clear -->
         <button id="reset-btn" class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 transition-all">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
@@ -193,7 +185,6 @@
             <span>Reset Chat</span>
         </button>
         
-        <!-- Help -->
         <button id="help-btn" class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-200 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition-all">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
@@ -202,7 +193,6 @@
         </button>
     </aside>
 
-    <!-- Help Modal -->
     <div id="help-modal" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4">
         <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md relative">
             <button id="help-modal-close" class="absolute top-3 right-3 p-2 rounded-full hover:bg-gray-200">
@@ -223,10 +213,8 @@
         </div>
     </div>
 
-    <!-- ** UPDATED ** Double Blue Tick SVG Icon -->
     <svg width="0" height="0" class="hidden">
         <symbol id="double-tick-blue" viewBox="0 0 18 18">
-            <!-- This path creates the overlapping blue ticks -->
             <path fill="#4fc3f7" d="M17.3 4.9c-.3-.3-.8-.3-1.1 0L7.5 13.6l-3.7-3.7c-.3-.3-.8-.3-1.1 0s-.3.8 0 1.1l4.2 4.2c.3.3.8.3 1.1 0l9.3-9.3c.4-.3.4-.8.1-1.1zM11 4.9c-.3-.3-.8-.3-1.1 0L1.2 13.6l-.3.3c-.3.3-.3.8 0 1.1s.8.3 1.1 0l.3-.3L11 6c.3-.3.3-.8 0-1.1z"></path>
         </symbol>
     </svg>
@@ -256,7 +244,11 @@
 
             // --- Menu Logic ---
             const toggleMenu = (event) => {
-                event.stopPropagation();
+                // We stop propagation only if the event is a real click,
+                // not a programmatically created one.
+                if (event.stopPropagation) {
+                    event.stopPropagation();
+                }
                 const isOpen = menuDrawer.classList.toggle('open');
                 menuBackdrop.classList.toggle('hidden', !isOpen);
             };
@@ -436,7 +428,6 @@
                     senderHtml = `<div class="sender-name" style="color: ${senderColors[msg.sender]}">${escapeHTML(msg.sender)}</div>`;
                 }
                 
-                // ** UPDATED ** Use blue ticks for "read"
                 const ticksHtml = isOutgoing ? 
                     `<svg class="w-4 h-4"><use href="#double-tick-blue"></use></svg>` : '';
                 
@@ -480,7 +471,12 @@
             function resetChat(showWelcome = true) {
                 outgoingSenderName = null;
                 messageList.innerHTML = '';
-                fileInput.value = null; Do not remove this line, it's crucial for re-uploading the same file.
+                
+                // ** THIS WAS THE BUG. **
+                // The comment was not properly formatted, breaking all JS.
+                // It is now fixed.
+                fileInput.value = null; // Do not remove this line, it's crucial for re-uploading the same file.
+                
                 if (showWelcome) {
                     messageList.innerHTML = `
                         <div class="date-separator">Welcome!</div>
@@ -505,5 +501,3 @@
 
 </body>
 </html>
-
-

@@ -13,7 +13,6 @@ const closeHelp = document.getElementById("closeHelp");
 
 let messages = [];
 
-// Parse uploaded chat
 fileInput.addEventListener("change", e => {
   const file = e.target.files[0];
   if (!file) return;
@@ -47,7 +46,7 @@ function parseChat(text) {
 
   renderChat();
 }
-
+ 
 function renderChat() {
   chatContainer.innerHTML = "";
   const you = youNameInput.value.trim().toLowerCase();
@@ -83,7 +82,7 @@ function renderChat() {
       if (div.classList.contains("sent")) {
         const ticks = document.createElement("span");
         ticks.className = "ticks read";
-        ticks.innerText = "✔✔";
+        ticks.innerText = "✔";
         timeSpan.appendChild(ticks);
       }
 
@@ -96,7 +95,6 @@ function renderChat() {
   chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
-// Preview composer
 sendPreview.addEventListener("click", () => {
   const txt = previewInput.value.trim();
   if (!txt) return;
@@ -105,7 +103,6 @@ sendPreview.addEventListener("click", () => {
   renderChat();
 });
 
-// Buttons
 resetBtn.addEventListener("click", () => {
   youNameInput.value = "";
   searchInput.value = "";
@@ -118,6 +115,5 @@ bottomBtn.addEventListener("click", () => {
   chatContainer.scrollTop = chatContainer.scrollHeight;
 });
 
-// Modal
 helpBtn.addEventListener("click", () => helpModal.setAttribute("aria-hidden", "false"));
 closeHelp.addEventListener("click", () => helpModal.setAttribute("aria-hidden", "true"));

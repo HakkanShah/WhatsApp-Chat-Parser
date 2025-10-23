@@ -472,11 +472,8 @@
                 outgoingSenderName = null;
                 messageList.innerHTML = '';
                 
-                // ** THIS WAS THE BUG. **
-                // The comment was not properly formatted, breaking all JS.
-                // It is now fixed.
-                fileInput.value = null; // Do not remove this line, it's crucial for re-uploading the same file.
                 
+                fileInput.value = null; 
                 if (showWelcome) {
                     messageList.innerHTML = `
                         <div class="date-separator">Welcome!</div>

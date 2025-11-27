@@ -3,498 +3,217 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WhatsApp Chat Viewer</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>WhatsApp Chat Parser - View & Analyze Your Chats</title>
+    <meta name="description" content="Parse, view, and analyze your WhatsApp chat exports with a beautiful interface">
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <style>
-        /* Use Inter font */
-        body {
-            font-family: 'Inter', sans-serif;
-            overscroll-behavior: none;
-        }
-        
-        /* Custom scrollbar */
-        #chat-container::-webkit-scrollbar {
-            width: 6px;
-        }
-        #chat-container::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        #chat-container::-webkit-scrollbar-thumb {
-            background-color: rgba(0, 0, 0, 0.2);
-            border-radius: 3px;
-        }
-        
-        /* Chat bubble base styles */
-        .chat-bubble {
-            max-width: 80%;
-            padding: 8px 12px;
-            border-radius: 12px;
-            word-wrap: break-word;
-            position: relative;
-        }
-        
-        /* Incoming chat bubble */
-        .chat-bubble.incoming {
-            background-color: #ffffff;
-            border-radius: 12px 12px 12px 0;
-            align-self: flex-start;
-            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-        }
-        
-        /* Outgoing chat bubble */
-        .chat-bubble.outgoing {
-            background-color: #d9fdd3;
-            border-radius: 12px 12px 0 12px;
-            align-self: flex-end;
-            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-        }
-        
-        /* Sender name (for group chats) */
-        .sender-name {
-            font-weight: 600;
-            font-size: 0.8rem;
-            margin-bottom: 2px;
-            /* Colors are applied via JS */
-            color: #3b82f6; /* default blue */
-        }
-
-        /* Message content */
-        .message-content {
-            font-size: 0.95rem;
-            line-height: 1.4;
-        }
-        
-        /* Timestamp and ticks */
-        .timestamp {
-            font-size: 0.7rem;
-            color: #667085; /* gray-500 */
-            text-align: right;
-            margin-top: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 4px;
-        }
-        
-        /* System message (e.g., "You joined...") */
-        .system-message {
-            align-self: center;
-            background-color: #fef3c7; /* amber-100 */
-            color: #92400e; /* amber-900 */
-            font-size: 0.75rem;
-            font-weight: 500;
-            padding: 4px 10px;
-            border-radius: 8px;
-            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-        }
-
-        /* Date Separator Chip */
-        .date-separator {
-            align-self: center;
-            background-color: #e7f0e4; /* WhatsApp light date chip */
-            color: #54656f; /* WhatsApp gray */
-            font-size: 0.75rem;
-            font-weight: 500;
-            padding: 4px 10px;
-            border-radius: 8px;
-            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-        }
-        
-        /* Menu drawer transition */
-        #menu-drawer {
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            transform: translateX(100%);
-        }
-        
-        #menu-drawer.open {
-            transform: translateX(0);
-        }
-        
-        /* Hide default file input */
-        #file-input {
-            display: none;
-        }
-    </style>
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/chat.css">
+    <link rel="stylesheet" href="styles/components.css">
 </head>
-<body class="bg-gray-200 h-[100dvh] overflow-hidden">
-
-    <div class="flex flex-col h-full max-w-4xl mx-auto shadow-2xl bg-[#EAE6DF]">
+<body>
+    <!-- Main Container -->
+    <div id="app" class="app-container">
         
-        <header class="bg-[#008069] text-white p-3 shadow-md z-20 flex justify-between items-center flex-shrink-0">
-            <div class="flex items-center gap-3">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-7 h-7" fill="currentColor">
-                    <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27.2 106.1 27.2h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.8 0-67.3-9.5-96.2-26.7l-6.8-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/>
-                </svg>
-                <h1 class="text-xl font-semibold">WhatsApp Chat Viewer</h1>
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <svg class="whatsapp-icon" viewBox="0 0 448 512" fill="currentColor">
+                        <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27.2 106.1 27.2h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.8 0-67.3-9.5-96.2-26.7l-6.8-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/>
+                    </svg>
+                    <h1 class="app-title">WhatsApp Chat Parser</h1>
+                </div>
+                <div class="header-right">
+                    <button id="statsBtn" class="icon-btn" title="Statistics" aria-label="View statistics">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
+                    </button>
+                    <button id="menuBtn" class="icon-btn" title="Menu" aria-label="Open menu">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
-            
-            <button id="menu-toggle" class="p-2 rounded-full hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-white">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                </svg>
-            </button>
         </header>
-        
-        <main id="chat-container" class="flex-grow overflow-y-auto" style="background-image: url('https://i.pinimg.com/736x/85/ec/df/85ecdf1c36110b708ddf94aa35b8f714.jpg'); background-repeat: repeat; background-position: center; background-size: auto;">
-            <div id="message-list" class="flex flex-col space-y-3 p-4">
-                <div class="date-separator">
-                    Welcome!
-                </div>
-                <div class="system-message">
-                    Upload your .txt chat file using the menu.
-                </div>
-                </div>
-        </main>
-    </div>
 
-    <div id="menu-backdrop" class="fixed inset-0 bg-black/60 z-30 hidden" aria-hidden="true"></div>
-
-    <aside id="menu-drawer" class="fixed top-0 right-0 h-full w-4/5 max-w-xs bg-white text-black shadow-lg z-40 p-6 flex flex-col space-y-4">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-semibold">Menu</h2>
-            <button id="menu-close" class="p-2 rounded-full hover:bg-gray-200">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        <!-- Search Bar -->
+        <div id="searchBar" class="search-bar hidden">
+            <div class="search-input-wrapper">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="m21 21-4.35-4.35"/>
                 </svg>
-            </button>
+                <input type="text" id="searchInput" placeholder="Search messages..." class="search-input">
+                <button id="clearSearch" class="clear-search-btn hidden">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div id="searchResults" class="search-results hidden"></div>
         </div>
-        
-        <label for="file-input" class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 text-white rounded-lg shadow-md cursor-pointer hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
-            </svg>
-            <span>Upload Chat (.txt)</span>
-        </label>
-        <input type="file" id="file-input" accept=".txt">
-        
-        <button id="scroll-bottom-btn" class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-200 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition-all">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
-            </svg>
-            <span>Scroll to Bottom</span>
-        </button>
-        
-        <button id="reset-btn" class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 transition-all">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-            </svg>
-            <span>Reset Chat</span>
-        </button>
-        
-        <button id="help-btn" class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-200 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition-all">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
-            </svg>
-            <span>Help</span>
-        </button>
-    </aside>
 
-    <div id="help-modal" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4">
-        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md relative">
-            <button id="help-modal-close" class="absolute top-3 right-3 p-2 rounded-full hover:bg-gray-200">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        <!-- Chat Container -->
+        <main id="chatContainer" class="chat-container">
+            <div id="chatMessages" class="chat-messages">
+                <!-- Welcome Screen -->
+                <div class="welcome-screen">
+                    <div class="welcome-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                        </svg>
+                    </div>
+                    <h2 class="welcome-title">Welcome to WhatsApp Chat Parser</h2>
+                    <p class="welcome-text">Upload your WhatsApp chat export to get started</p>
+                    <button id="uploadBtnWelcome" class="btn-primary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                        </svg>
+                        Upload Chat File
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Scroll to Bottom Button -->
+            <button id="scrollBottomBtn" class="scroll-bottom-btn hidden">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
                 </svg>
             </button>
-            <h3 class="text-lg font-semibold mb-4">How to Use</h3>
-            <div class="space-y-3 text-sm text-gray-700">
-                <p>1. Open WhatsApp on your phone.</p>
-                <p>2. Go to the chat you want to export.</p>
-                <p>3. Tap the three-dot menu (⋮) > More > Export chat.</p>
-                <p>4. Choose 'Without Media' for a faster, smaller .txt file.</p>
-                <p>5. Save or send the .txt file to this device.</p>
-                <p>6. Click 'Upload Chat (.txt)' in the app menu and select your file.</p>
-                <p class="font-semibold mt-2">Note: The parser assumes the *second* person who messages in the file is 'you' (outgoing). All other senders will appear as 'incoming'. This works best for 1-on-1 chats.</p>
+        </main>
+
+        <!-- Side Menu -->
+        <div id="menuOverlay" class="menu-overlay hidden"></div>
+        <aside id="sideMenu" class="side-menu">
+            <div class="menu-header">
+                <h2 class="menu-title">Menu</h2>
+                <button id="closeMenuBtn" class="icon-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="menu-content">
+                <label for="fileInput" class="menu-btn upload-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                    </svg>
+                    <span>Upload Chat</span>
+                </label>
+                <input type="file" id="fileInput" accept=".txt" hidden>
+                
+                <button id="searchToggleBtn" class="menu-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <span>Search Messages</span>
+                </button>
+                
+                <button id="exportBtn" class="menu-btn" disabled>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                    </svg>
+                    <span>Export as JSON</span>
+                </button>
+                
+                <button id="clearBtn" class="menu-btn" disabled>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                    <span>Clear Chat</span>
+                </button>
+                
+                <button id="helpBtn" class="menu-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    <span>How to Use</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Statistics Modal -->
+        <div id="statsModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Chat Statistics</h3>
+                    <button id="closeStatsBtn" class="icon-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                <div id="statsContent" class="modal-body">
+                    <p class="text-muted">No chat loaded yet</p>
+                </div>
             </div>
         </div>
-    </div>
 
-    <svg width="0" height="0" class="hidden">
-        <symbol id="double-tick-blue" viewBox="0 0 18 18">
-            <path fill="#4fc3f7" d="M17.3 4.9c-.3-.3-.8-.3-1.1 0L7.5 13.6l-3.7-3.7c-.3-.3-.8-.3-1.1 0s-.3.8 0 1.1l4.2 4.2c.3.3.8.3 1.1 0l9.3-9.3c.4-.3.4-.8.1-1.1zM11 4.9c-.3-.3-.8-.3-1.1 0L1.2 13.6l-.3.3c-.3.3-.3.8 0 1.1s.8.3 1.1 0l.3-.3L11 6c.3-.3.3-.8 0-1.1z"></path>
-        </symbol>
-    </svg>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // DOM Elements
-            const menuToggle = document.getElementById('menu-toggle');
-            const menuClose = document.getElementById('menu-close');
-            const menuDrawer = document.getElementById('menu-drawer');
-            const menuBackdrop = document.getElementById('menu-backdrop');
-            const fileInput = document.getElementById('file-input');
-            const messageList = document.getElementById('message-list');
-            const chatContainer = document.getElementById('chat-container');
-            const scrollBottomBtn = document.getElementById('scroll-bottom-btn');
-            const resetBtn = document.getElementById('reset-btn');
-            const helpBtn = document.getElementById('help-btn');
-            const helpModal = document.getElementById('help-modal');
-            const helpModalClose = document.getElementById('help-modal-close');
-
-            let outgoingSenderName = null;
-            const senderColors = {};
-            const colorPalette = [
-                '#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899'
-            ];
-            let colorIndex = 0;
-
-            // --- Menu Logic ---
-            const toggleMenu = (event) => {
-                // We stop propagation only if the event is a real click,
-                // not a programmatically created one.
-                if (event.stopPropagation) {
-                    event.stopPropagation();
-                }
-                const isOpen = menuDrawer.classList.toggle('open');
-                menuBackdrop.classList.toggle('hidden', !isOpen);
-            };
-
-            menuToggle.addEventListener('click', toggleMenu);
-            menuClose.addEventListener('click', toggleMenu);
-            menuBackdrop.addEventListener('click', toggleMenu);
-
-            // --- Help Modal Logic ---
-            helpBtn.addEventListener('click', () => {
-                helpModal.classList.remove('hidden');
-                helpModal.classList.add('flex');
-                toggleMenu(new Event('click')); // Close menu
-            });
-            helpModalClose.addEventListener('click', () => {
-                helpModal.classList.add('hidden');
-                helpModal.classList.remove('flex');
-            });
-            helpModal.addEventListener('click', (e) => {
-                if (e.target === helpModal) {
-                    helpModal.classList.add('hidden');
-                    helpModal.classList.remove('flex');
-                }
-            });
-
-            // --- Button Logic ---
-            scrollBottomBtn.addEventListener('click', () => {
-                scrollToBottom();
-                toggleMenu(new Event('click')); // Close menu
-            });
-            
-            resetBtn.addEventListener('click', () => {
-                resetChat();
-                toggleMenu(new Event('click')); // Close menu
-            });
-
-            // --- File Handling Logic ---
-            fileInput.addEventListener('change', (event) => {
-                const file = event.target.files[0];
-                if (!file) {
-                    showSystemMessage("No file selected.", "error");
-                    return;
-                }
-                if (file.type !== 'text/plain') {
-                    showSystemMessage("Please upload a .txt file.", "error");
-                    return;
-                }
-                
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const content = e.target.result;
-                    parseChat(content);
-                };
-                reader.onerror = () => {
-                    showSystemMessage("Error reading file.", "error");
-                };
-                reader.readAsText(file);
-                
-                toggleMenu(new Event('click')); // Close menu
-            });
-
-            // --- Parsing Logic ---
-            function parseChat(content) {
-                resetChat(false); // Clear chat but don't show welcome message
-                
-                const messageStartRegex = /^(?:\u200E|\u200F)*\[?(\d{1,2}[./]\d{1,2}[./]\d{2,4}), (\d{1,2}:\d{2}(?::\d{2})?(?: [AP]M)?)\] (.*?): (.*)$/;
-                const messageStartRegex2 = /^(?:\u200E|\u200F)*(\d{1,2}[./]\d{1,2}[./]\d{2,4}), (\d{1,2}:\d{2}(?: [AP]M)?) - (.*?): (.*)$/;
-                const systemMessageRegex = /^(?:\u200E|\u200F)*\[?(\d{1,2}[./]\d{1,2}[./]\d{2,4}), (\d{1,2}:\d{2}(?::\d{2})?(?: [AP]M)?)\] (.*)$/;
-                
-                const lines = content.split('\n');
-                const messages = [];
-                let currentMessage = null;
-                outgoingSenderName = null;
-                let currentDate = null; // For tracking date changes
-
-                for (const line of lines) {
-                    let match = line.match(messageStartRegex);
-                    if (!match) match = line.match(messageStartRegex2);
-
-                    if (match) {
-                        // This is a new message
-                        if (currentMessage) messages.push(currentMessage);
+        <!-- Help Modal -->
+        <div id="helpModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">How to Use</h3>
+                    <button id="closeHelpBtn" class="icon-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="help-content">
+                        <div class="help-section">
+                            <h4>📱 Export Your Chat</h4>
+                            <ol>
+                                <li>Open WhatsApp on your phone</li>
+                                <li>Go to the chat you want to export</li>
+                                <li>Tap the three-dot menu (⋮) → More → Export chat</li>
+                                <li>Choose "Without Media" for a smaller file</li>
+                                <li>Save or send the .txt file to this device</li>
+                            </ol>
+                        </div>
                         
-                        const [_, date, time, sender, content] = match;
+                        <div class="help-section">
+                            <h4>📤 Upload & View</h4>
+                            <ol>
+                                <li>Click "Upload Chat" in the menu</li>
+                                <li>Select your exported .txt file</li>
+                                <li>Your chat will be parsed and displayed</li>
+                            </ol>
+                        </div>
                         
-                        // Check for date change
-                        if (date !== currentDate) {
-                            messages.push({ type: 'date-separator', content: [date] });
-                            currentDate = date;
-                        }
-
-                        // Guess the outgoing sender
-                        if (outgoingSenderName === null && messages.length > 1 && messages[1].sender !== sender) {
-                            outgoingSenderName = sender;
-                        }
+                        <div class="help-section">
+                            <h4>✨ Features</h4>
+                            <ul>
+                                <li><strong>Search:</strong> Find specific messages quickly</li>
+                                <li><strong>Statistics:</strong> View chat analytics</li>
+                                <li><strong>Export:</strong> Save parsed data as JSON</li>
+                                <li><strong>Responsive:</strong> Works on all devices</li>
+                            </ul>
+                        </div>
                         
-                        currentMessage = {
-                            date,
-                            time: time.replace(' AM', ' am').replace(' PM', ' pm'), // Format AM/PM
-                            sender: sender.trim(),
-                            content: [content],
-                            type: 'chat'
-                        };
-                    } else if (line.match(systemMessageRegex)) {
-                        // This is a system message
-                        if (currentMessage) messages.push(currentMessage);
-                        currentMessage = null;
-                        
-                        const sysMatch = line.match(systemMessageRegex);
-                        const [_, date, time, content] = sysMatch;
-
-                        // Check for date change
-                        if (date !== currentDate) {
-                            messages.push({ type: 'date-separator', content: [date] });
-                            currentDate = date;
-                        }
-                        
-                        messages.push({
-                            content: [content],
-                            type: 'system'
-                        });
-                    } else if (currentMessage && line.trim() !== "") {
-                        // This is a multi-line continuation
-                        currentMessage.content.push(line);
-                    }
-                }
-                
-                if (currentMessage) messages.push(currentMessage);
-
-                if (messages.length === 0) {
-                    showSystemMessage("Could not parse any messages. Is this a valid WhatsApp chat export?", "error");
-                    return;
-                }
-                
-                if (outgoingSenderName === null && messages.length > 0) {
-                    const firstSender = messages.find(m => m.type === 'chat')?.sender;
-                    if(firstSender) outgoingSenderName = firstSender;
-                }
-
-                renderMessages(messages);
-            }
-
-            // --- Rendering Logic ---
-            function renderMessages(messages) {
-                let html = '';
-                for (const msg of messages) {
-                    if (msg.type === 'system') {
-                        html += createSystemBubble(msg);
-                    } else if (msg.type === 'chat') {
-                        html += createChatBubble(msg);
-                    } else if (msg.type === 'date-separator') {
-                        html += createDateBubble(msg);
-                    }
-                }
-                messageList.innerHTML = html;
-                scrollToBottom();
-            }
-            
-            function createChatBubble(msg) {
-                const isOutgoing = msg.sender === outgoingSenderName;
-                const bubbleClass = isOutgoing ? 'outgoing' : 'incoming';
-                
-                const contentHtml = msg.content.map(line => 
-                    escapeHTML(line)
-                        .replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:underline">$1</a>')
-                        .replace(/\*(.*?)\*/g, '<strong>$1</strong>') // Bold
-                        .replace(/_(.*?)_/g, '<em>$1</em>') // Italic
-                        .replace(/~(.*?)~/g, '<del>$1</del>') // Strikethrough
-                ).join('<br>');
-                
-                let senderHtml = '';
-                if (!isOutgoing) {
-                    if (!senderColors[msg.sender]) {
-                        senderColors[msg.sender] = colorPalette[colorIndex % colorPalette.length];
-                        colorIndex++;
-                    }
-                    senderHtml = `<div class="sender-name" style="color: ${senderColors[msg.sender]}">${escapeHTML(msg.sender)}</div>`;
-                }
-                
-                const ticksHtml = isOutgoing ? 
-                    `<svg class="w-4 h-4"><use href="#double-tick-blue"></use></svg>` : '';
-                
-                return `
-                    <div class="chat-bubble ${bubbleClass}">
-                        ${senderHtml}
-                        <div class="message-content">${contentHtml}</div>
-                        <div class="timestamp">
-                            ${escapeHTML(msg.time)}
-                            ${ticksHtml}
+                        <div class="help-note">
+                            <strong>Note:</strong> The parser automatically detects the sender. In 1-on-1 chats, the second person to send a message is assumed to be "you" (outgoing messages).
                         </div>
                     </div>
-                `;
-            }
-            
-            function createSystemBubble(msg) {
-                 return `<div class="system-message">${escapeHTML(msg.content.join('<br>'))}</div>`;
-            }
-            
-            function createDateBubble(msg) {
-                return `<div class="date-separator">${escapeHTML(msg.content[0])}</div>`;
-            }
+                </div>
+            </div>
+        </div>
+    </div>
 
-            function showSystemMessage(message, type = "info") {
-                const bubble = document.createElement('div');
-                if (type === 'error') {
-                     bubble.className = 'system-message !bg-red-200 !text-red-800';
-                } else {
-                    bubble.className = (message.includes("Welcome")) ? 'date-separator' : 'system-message';
-                }
-                bubble.textContent = message;
-                messageList.appendChild(bubble);
-                scrollToBottom();
-            }
-
-            // --- Utility Functions ---
-            function scrollToBottom() {
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            }
-
-            function resetChat(showWelcome = true) {
-                outgoingSenderName = null;
-                messageList.innerHTML = '';
-                
-                
-                fileInput.value = null; 
-                if (showWelcome) {
-                    messageList.innerHTML = `
-                        <div class="date-separator">Welcome!</div>
-                        <div class="system-message">Upload your .txt chat file using the menu.</div>
-                    `;
-                }
-            }
-            
-            function escapeHTML(str) {
-                return str.replace(/[&<>"']/g, (match) => {
-                    return {
-                      '&': '&amp;',
-                      '<': '&lt;',
-                      '>': '&gt;',
-                      '"': '&quot;',
-                      "'": '&#39;'
-                    }[match];
-                });
-            }
-        });
-    </script>
-
+    <!-- Scripts -->
+    <script type="module" src="js/app.js"></script>
 </body>
 </html>

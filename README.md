@@ -1,4 +1,4 @@
-# WhatsApp Chat Parser
+# WhatsApp Chat Parser  
 
 A modern, feature-rich web application for parsing, viewing, and analyzing WhatsApp chat exports with a beautiful user interface.
 
